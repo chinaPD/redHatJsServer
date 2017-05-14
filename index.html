@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DiskFile Analysis</title>
+    <meta charset="utf-8">
+    <script src="http://code.angularjs.org/angular-1.0.1.min.js"></script>
+
+</head>
+
+<body>
+<div ng-app="myApp" ng-controller="siteCtrl">
+    <form method="post" enctype="multipart/form-data">
+        <fieldset style="margin:0 auto;">
+            <label for="dfText">Your df Output Content:</label>
+            <textarea id="dfText" ng-model="dfText" placeholder="Please paste you df output or upload your df output file!"
+                      style="width:800px;height:300px"></textarea>
+            <br/>
+            <label for="dfFile">Upload your df content file:</label>
+            <input id="dfFile" type="file" file-model="dfFile">
+            <button ng-click="analysis()" ng-con>Analysis</button>
+        </fieldset>
+    </form>
+    <fieldset style="margin:0 auto;">
+        <label for="dfOut">DiskFileSystem Analysis:</label>
+        <textarea id="dfOut" style="width:800px;height:300px">{{out}}</textarea>
+    </fieldset>
+</div>
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('siteCtrl', function ($scope, $http) {
+        $scope.analysis = function () {
+            var fd = new FormData();
+            var dfText = document.querySelector('textarea').value;
+            var file = document.querySelector('input[type=file]').files[0];
+            fd.append('dfText', dfText);
+            fd.append('dfFile', file);
+            $http({
+                method: 'POST',
+                url: "/",
+                data: fd,
+                headers: {'Content-Type': undefined},
+                transformRequest: angular.identity
+            }).then(function successCallback(response) {
+                    $scope.out = response.data;
+                    return;
+                },
+                function errorCallback(response) {
+
+                }
+            );
+
+        };
+    })
+
+</script>
+
+</body>
+</html>
